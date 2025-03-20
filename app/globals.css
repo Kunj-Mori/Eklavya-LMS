@@ -1,0 +1,368 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    --radius: 0.5rem;
+    
+    /* AI Examination Theme Colors */
+    --ai-blue-light: 210, 100%, 60%;
+    --ai-blue: 210, 100%, 50%;
+    --ai-blue-dark: 210, 100%, 40%;
+    --ai-purple-light: 270, 100%, 65%;
+    --ai-purple: 270, 100%, 55%;
+    --ai-purple-dark: 270, 100%, 45%;
+    --ai-green-light: 160, 100%, 45%;
+    --ai-green: 160, 100%, 40%;
+    --ai-green-dark: 160, 100%, 35%;
+    --ai-pulse-speed: 2s;
+    --ai-transition-speed: 0.3s;
+    
+    /* Updated theme colors */
+    --theme-bg: 210 50% 98%;
+    --theme-card: 0 0% 100%;
+    --theme-primary: 220 70% 50%;
+    --theme-secondary: 250 70% 60%;
+    --theme-accent: 280 70% 60%;
+    --theme-text: 220 20% 20%;
+    --theme-border: 220 30% 90%;
+    --theme-shadow: 220 50% 15%;
+    --theme-hover: 214, 95%, 90%;
+  }
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+    
+    /* AI Examination Theme Colors for Dark Mode */
+    --ai-blue-light: 210, 70%, 70%;
+    --ai-blue: 210, 70%, 60%;
+    --ai-blue-dark: 210, 70%, 50%;
+    --ai-purple-light: 270, 70%, 75%;
+    --ai-purple: 270, 70%, 65%;
+    --ai-purple-dark: 270, 70%, 55%;
+    --ai-green-light: 160, 70%, 50%;
+    --ai-green: 160, 70%, 45%;
+    --ai-green-dark: 160, 70%, 40%;
+    
+    /* Updated theme colors for dark mode */
+    --theme-bg: 220 30% 10%;
+    --theme-card: 220 20% 15%;
+    --theme-primary: 220 70% 60%;
+    --theme-secondary: 250 70% 70%;
+    --theme-accent: 280 70% 70%;
+    --theme-text: 220 20% 90%;
+    --theme-border: 220 30% 25%;
+    --theme-shadow: 220 50% 5%;
+    --theme-hover: 220, 30%, 20%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    background-color: hsl(var(--theme-bg));
+  }
+}
+
+/* Modern UI Animation Keyframes */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 0 10px 2px rgba(59, 130, 246, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 20px 5px rgba(147, 51, 234, 0.3);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes expand {
+  from {
+    transform: scale(0.8);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+/* Modern UI Animation Classes */
+.ai-pulse {
+  animation: pulse var(--ai-pulse-speed) infinite ease-in-out;
+}
+
+.ai-float {
+  animation: float 3s infinite ease-in-out;
+}
+
+.ai-glow {
+  box-shadow: 0 0 15px 2px rgba(59, 130, 246, 0.5);
+  animation: glow 3s infinite ease-in-out;
+}
+
+.ai-shimmer {
+  background: linear-gradient(90deg, 
+    rgba(255,255,255,0) 0%, 
+    rgba(255,255,255,0.2) 50%, 
+    rgba(255,255,255,0) 100%);
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite linear;
+}
+
+.ai-spin {
+  animation: spin 1s linear infinite;
+}
+
+.ai-bounce {
+  animation: bounce 2s infinite ease-in-out;
+}
+
+.ai-expand {
+  animation: expand 0.5s ease-out;
+}
+
+/* Interactive elements */
+.ai-btn {
+  @apply bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-600 text-white relative overflow-hidden transition-all duration-300;
+  background-size: 200% 100%;
+  animation: gradient-shift 3s ease infinite;
+}
+
+.ai-btn:before {
+  content: "";
+  @apply absolute top-0 left-0 right-0 bottom-0 opacity-30;
+  background: linear-gradient(45deg, transparent 25%, rgba(255,255,255,0.2) 50%, transparent 75%);
+  background-size: 250% 250%;
+  animation: shimmer 2s infinite linear;
+}
+
+.ai-btn:hover {
+  transform: translateY(-2px);
+}
+
+.ai-btn:active {
+  transform: translateY(1px);
+}
+
+.ai-btn::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(to right,
+    hsla(var(--ai-purple), 0.5),
+    hsla(var(--ai-blue), 0.5));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--ai-transition-speed) ease-in-out;
+  z-index: -1;
+}
+
+.ai-btn:hover::after {
+  transform: scaleX(1);
+}
+
+/* Theme Components */
+.theme-card {
+  @apply bg-white rounded-xl shadow-md border border-slate-200 overflow-hidden transition-all duration-300 hover:shadow-lg;
+}
+
+.theme-btn {
+  @apply bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-md font-medium hover:shadow-lg transition-all duration-300;
+}
+
+.theme-btn:active {
+  transform: translateY(1px);
+}
+
+.theme-btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    transparent, 
+    rgba(255, 255, 255, 0.2), 
+    transparent);
+  transition: all 0.5s ease;
+}
+
+.theme-btn:hover::after {
+  left: 100%;
+}
+
+.theme-header {
+  @apply bg-gradient-to-r from-blue-50 to-indigo-50 p-6 border-b border-slate-200;
+}
+
+.theme-input {
+  @apply bg-white border border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-lg px-4 py-2 transition-all duration-200;
+}
+
+.theme-input:focus {
+  border-color: hsla(var(--theme-primary), 0.6);
+  box-shadow: 0 0 0 3px hsla(var(--theme-primary), 0.2), 
+              inset 0 2px 4px -2px hsla(var(--theme-shadow));
+  outline: none;
+}
+
+.theme-sidebar {
+  background-color: hsl(var(--theme-card));
+  border-right: 1px solid hsla(var(--theme-border), 0.7);
+  box-shadow: 2px 0 8px -2px hsla(var(--theme-shadow));
+}
+
+.theme-progress {
+  background-color: hsla(var(--theme-border), 0.4);
+  border-radius: 9999px;
+  overflow: hidden;
+  height: 0.5rem;
+}
+
+.theme-progress-bar {
+  background: linear-gradient(90deg, hsl(var(--theme-primary)), hsl(var(--theme-secondary)));
+  height: 100%;
+  border-radius: 9999px;
+  transition: width 0.5s ease;
+}
+
+.ql-container {
+  font-size: 16px !important;
+}
+
+/* AI-specific styles */
+@keyframes gradient-shift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* Animations */
+.animate-bounce-slow {
+  animation: bounce 2s ease-in-out infinite;
+}
+
+.animate-pulse-slow {
+  animation: glow 3s ease-in-out infinite;
+}

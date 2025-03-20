@@ -1,0 +1,237 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextIndex", "fullTextSearch"]
+}
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model Course {
+  id               String             @id @default(uuid())
+  userId           String
+  title            String             @db.Text
+  description      String?            @db.Text
+  imageUrl         String?            @db.Text
+  price            Float?
+  isPublished      Boolean            @default(false)
+  categoryId       String?
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  category         Category?          @relation(fields: [categoryId], references: [id])
+  attachments      Attachment[]
+  chapters         Chapter[]
+  quizzes          Quiz[]
+  Purchase         Purchase[]
+  RazorpayCustomer RazorpayCustomer[]
+  assessments      Assessment[]
+
+  @@index([categoryId])
+  @@fulltext([title])
+}
+
+model Category {
+  id      String   @id @default(uuid())
+  name    String   @unique
+  courses Course[]
+}
+
+model Attachment {
+  id        String   @id @default(uuid())
+  name      String
+  url       String   @db.Text
+  courseId  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@index([courseId])
+}
+
+model Chapter {
+  id           String         @id @default(uuid())
+  title        String         @db.Text
+  description  String?        @db.Text
+  videoUrl     String?        @db.Text
+  position     Int
+  isPublished  Boolean        @default(false)
+  isFree       Boolean        @default(false)
+  courseId     String
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  course       Course         @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  userProgress UserProgress[]
+
+  @@index([courseId])
+}
+
+model UserProgress {
+  id          String   @id @default(uuid())
+  userId      String
+  chapterId   String?
+  isCompleted Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  Chapter     Chapter? @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, chapterId])
+  @@index([chapterId])
+}
+
+model Purchase {
+  id        String   @id @default(uuid())
+  userId    String
+  courseId  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, courseId])
+  @@index([courseId])
+}
+
+model StripeCustomer {
+  id               String   @id @default(uuid())
+  userId           String   @unique
+  stripeCustomerId String
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model RazorpayCustomer {
+  id                String   @id @default(uuid())
+  orderId           String   @unique
+  userId            String
+  courseId          String
+  amount            Int
+  currency          String
+  status            String
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  razorpaypaymentid String   @default("")
+  Course            Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([courseId])
+}
+
+model Quiz {
+  id        String         @id @default(uuid())
+  courseId  String
+  course    Course         @relation(fields: [courseId], references: [id], onDelete: Cascade) // ✅ Correct relation
+  questions QuizQuestion[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model QuizQuestion {
+  id       String @id @default(uuid())
+  quizId   String
+  quiz     Quiz   @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  question String @db.Text
+  answer   String @db.Text
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([quizId])
+}
+
+model Assessment {
+  id              String               @id @default(uuid())
+  title           String
+  description     String?              @db.Text
+  assessmentType  AssessmentType       @default(ONLINE)
+  questionFormat  Json // Changed from QuestionFormat[] to Json
+  inclusivityMode Boolean              @default(false)
+  createdById     String
+  isPublished     Boolean              @default(false)
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
+  courseId        String?
+  course          Course?              @relation(fields: [courseId], references: [id], onDelete: SetNull)
+  sessions        AssessmentSession[]
+  questions       AssessmentQuestion[]
+
+  @@index([courseId])
+}
+
+enum AssessmentType {
+  ONLINE
+  OFFLINE
+  BLENDED
+}
+
+enum QuestionFormat {
+  MCQ
+  DESCRIPTIVE
+  PRACTICAL
+  VIVA
+  PEN_PAPER
+}
+
+model AssessmentQuestion {
+  id                   String               @id @default(uuid())
+  assessmentId         String
+  assessment           Assessment           @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  questionType         QuestionFormat
+  question             String               @db.Text
+  options              Json? // For MCQs
+  correctAnswer        String?              @db.Text
+  marks                Int                  @default(1)
+  difficultyLevel      Int                  @default(1) // 1-5 scale for adaptive assessment
+  accessibilityOptions Json? // Special options for PWD candidates
+  createdAt            DateTime             @default(now())
+  updatedAt            DateTime             @updatedAt
+  responses            AssessmentResponse[]
+
+  @@index([assessmentId])
+}
+
+model AssessmentSession {
+  id                    String               @id @default(uuid())
+  assessmentId          String
+  assessment            Assessment           @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  userId                String
+  startTime             DateTime?
+  endTime               DateTime?
+  status                SessionStatus        @default(NOT_STARTED)
+  score                 Float?
+  feedback              String?              @db.Text
+  createdAt             DateTime             @default(now())
+  updatedAt             DateTime             @updatedAt
+  accessibilitySettings Json? // PWD-specific settings
+  responses             AssessmentResponse[]
+
+  @@index([assessmentId])
+  @@index([userId])
+}
+
+enum SessionStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  COMPLETED
+  EVALUATED
+}
+
+model AssessmentResponse {
+  id           String             @id @default(uuid())
+  sessionId    String
+  session      AssessmentSession  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  questionId   String
+  question     AssessmentQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  answer       String?            @db.Text
+  isCorrect    Boolean?
+  aiEvaluation Json? // AI evaluation data for descriptive/practical answers
+  score        Float? // Score awarded for this response
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+
+  @@index([sessionId])
+  @@index([questionId])
+}
